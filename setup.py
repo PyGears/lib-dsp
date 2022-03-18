@@ -5,7 +5,7 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 
 
 def readme():
-    with open(os.path.join(this_directory, 'README.rst'),
+    with open(os.path.join(this_directory, 'README.md'),
               encoding='utf-8') as f:
         return f.read()
 
@@ -24,10 +24,9 @@ setup(
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    python_requires='>=3.8.0',
+    python_requires='>=3.7.0',
     install_requires=['scipy', 'matplotlib', 'pytest', 'pygears'],
     setup_requires=['scipy', 'matplotlib', 'pytest', 'pygears'],
     package_data={'': ['*.j2', '*.sv']},
