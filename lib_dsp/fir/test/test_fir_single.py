@@ -10,6 +10,7 @@ from pygears.sim import cosim, log, sim
 from pygears.typing import Fixp, Float
 from lib_dsp.fir import fir_direct, fir_transposed
 from lib_dsp.fir import fir_seq_lib
+from conftest import set_seed
 
 ############################## SELECT TEST ###############################
 test_sel = 1  # 0=fir_direct; 1=fir_transposed
@@ -26,7 +27,7 @@ seed = random.randrange(0, 2**32, 1)
 
 # """Unify all seeds"""
 log.info(f"Random SEED: {seed}")
-fir_seq_lib.set_seed(seed)
+set_seed(seed)
 
 # generate b coefficients
 b_coef = firwin(8, [0.05, 0.95], width=0.05, pass_zero=False)
@@ -55,7 +56,7 @@ try:
         if enable_svgen:
             cosim('fir_direct',
                   'verilator',
-                  outdir='outputs/fir/rtl',
+                  outdir='build/fir/rtl',
                   timeout=1000)
     else:
         drv(t=b_coef_type, seq=x) \
@@ -66,10 +67,10 @@ try:
         if enable_svgen:
             cosim('fir_transposed',
                   'verilator',
-                  outdir='outputs/fir/rtl',
+                  outdir='build/fir/rtl',
                   timeout=1000)
 
-    sim('outputs/fir/')
+    sim('build/fir/')
     log.info("\033[92m //==== PASS ====// \033[90m")
 except:
     # printing stack trace

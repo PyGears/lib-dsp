@@ -13,6 +13,7 @@ from pygears.sim.sim import cosim
 from pygears.typing import Fixp, Float
 from lib_dsp.fir import fir_direct, fir_transposed
 from lib_dsp.fir import fir_seq_lib
+from conftest import set_seed
 
 
 def fir_compare(x, y):
@@ -55,7 +56,7 @@ def fir_sim(impl, t_b, seq, do_cosim, target='build/fir'):
 @pytest.mark.parametrize('impl', [fir_direct, fir_transposed])
 def test_fir_random(impl, seed, do_cosim):
     # Set random seed
-    fir_seq_lib.set_seed(seed)
+    set_seed(seed)
 
     log.info(f'Running {__name__} impl: {impl}, seed: {seed}')
 
@@ -71,7 +72,7 @@ def test_fir_random(impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [fir_direct, fir_transposed])
 def test_fir_random_type(impl, seed, do_cosim):
     # Set random seed
-    fir_seq_lib.set_seed(seed)
+    set_seed(seed)
 
     log.info(f'{__name__} impl: {impl}, seed: {seed}')
 
@@ -106,7 +107,7 @@ def test_fir_limits(fixp_w, int_w, impl, seed, do_cosim):
     """[Drive filter with extreme values [min, 0 , max]
     """
     # Set random seed
-    fir_seq_lib.set_seed(seed)
+    set_seed(seed)
 
     log.info(f'Running {__name__} impl: {impl}, seed: {seed}')
 
@@ -131,7 +132,7 @@ def test_fir_sine(freq, impl, seed, do_cosim):
     """[Drive filter with sine signal at fs fs/2 and fs*2 
     """
     # Set random seed
-    fir_seq_lib.set_seed(seed)
+    set_seed(seed)
     # set clock freq
     reg['sim/clk_freq'] = freq
     t = list(range(reg['sim/clk_freq']))[0:100]

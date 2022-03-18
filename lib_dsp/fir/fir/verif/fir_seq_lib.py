@@ -1,10 +1,10 @@
-
 import random
 
 import numpy as np
 from math import log, pi, sin
 
 from pygears import reg
+
 
 def sine_seq(freq, fsample, num, t_b):
     """[Return sequence of float nubers as sine signal]
@@ -51,13 +51,6 @@ def constant_seq(fixp_t, num=1, val=None):
     for i in range(num):
         seq.append(val)
     return seq
-
-
-def set_seed(seed):
-    """Unify all seeds"""
-    reg['sim/rand_seed'] = seed
-    random.seed(reg['sim/rand_seed'])
-    np.random.seed(seed)
 
 
 def fixp_sat(f_type, val):

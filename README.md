@@ -20,10 +20,54 @@ PyGears library is Free and Open Sourced DSP library created for use in [PyGears
 
 ## Features
 
+
 ## Installation
+- Pull the code from GitHub and enter the lib root directory 
+
+```
+git pull https://github.com/PyGears/lib-dsp.git
+cd lib-dsp
+```
+- Recomendation is to use a contained python virtual envirnement 
+```
+# creates a virtual envirnement under folder 'venv' (any name can be used)
+python -m venv venv 
+# activates venv in the current console
+source venv/bin/activate
+```
+- Instalation of the DSP package
+```
+pip install -e .
+# alternativelly 
+# pip3 install -e .
+
+```
+- all dependencies should be checked and installed
+-  Trial if installation is succesfull and package is usable:
+
+```
+cd lib_dsp/fir/test
+
+python test_fir_single.py
+```
 
 ## Usage
-
+ 
+- Each dsp lib is contained in it's own directory under lib_dsp
+  -  __design__ folder should be all pygears code that describes desin and which can be imported in the lib 
+  - __verif__ folder should cotain all additional python code that can be reused for integration testin and verification 
+-  __/test__ folder whithin each dsp module should contain tests used for verifying model functionality
+    -  pytest framework was used for regression testing  
+    - recomendation to use Makefile to define exact commands used to test and verify each lib item
+- For testing suypport a common pytest additional code was is provided under __lib_dsp/conftest.py__
+  - apart from standard pytest features here are additions defined for the lib:
+    - --cosim -> can be used in tests to enable cosimulation
+    - --seed -> providing fixed seed 
+    - --num -> defining number of runs per test (bu default seed is incrementing function)
+    - --random -> provide random seed to each of the tests (can be used in combination with --num)
+  - additional pytest options and fixtures can be added for each individual lib item under 
+    - ``<gear_name>/test/conftest.py``
+    - ``<gear_name>/test/pytest.ini``
 ## Directory structure
 - dsp_lib `root folder`
   - dsp_lib `library with gears`

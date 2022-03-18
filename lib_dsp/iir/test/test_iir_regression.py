@@ -14,6 +14,7 @@ from pygears.sim.sim import cosim
 from pygears.typing import Fixp, Float
 from lib_dsp.iir import iir_df1dsos, iir_df2tsos
 from lib_dsp.iir import iir_seq_lib
+from conftest import set_seed
 
 
 def iir_compare(x, y):
@@ -129,7 +130,7 @@ def test_iir_direct(tmpdir, impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [iir_df1dsos, iir_df2tsos])
 def test_iir_random(impl, seed, do_cosim):
     log.info(f'Running test_iir_random seed: {seed}')
-    iir_seq_lib.set_seed(seed)
+    set_seed(seed)
 
     ftype = Fixp[5, 32]
 
@@ -143,7 +144,7 @@ def test_iir_random(impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [iir_df1dsos, iir_df2tsos])
 def test_iir_random_type(impl, seed, do_cosim):
     log.info(f'Running test_iir_random, seed: {seed}')
-    iir_seq_lib.set_seed(seed)
+    set_seed(seed)
 
     # minimum supported precision Fixp[3,19]
     int_w = random.randint(3, 7)
@@ -170,7 +171,7 @@ def test_iir_limits(fixp_w, int_w, impl, seed, do_cosim):
     """[Drive filter with extreme values [min, 0 , max]
     """
     log.info(f'Running test_iir_limits, seed: {seed}')
-    iir_seq_lib.set_seed(seed)
+    set_seed(seed)
     factor = 0.5  # supported factor
 
     ftype = Fixp[int_w, fixp_w]
@@ -189,7 +190,7 @@ def test_fir_sine(freq, impl, seed, do_cosim):
     """[Drive filter with sine signal at fs fs/2 and fs*2 
     """
     # Set random seed
-    iir_seq_lib.set_seed(seed)
+    set_seed(seed)
     # set clock freq
     reg['sim/clk_freq'] = freq
     t = list(range(reg['sim/clk_freq']))[0:100]

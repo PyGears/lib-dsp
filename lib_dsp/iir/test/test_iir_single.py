@@ -9,6 +9,7 @@ from pygears.sim import sim, cosim, log
 from pygears import reg
 
 from lib_dsp.iir import iir_seq_lib
+from conftest import set_seed
 
 ############################## SELECT TEST ###############################
 test_sel = 0  # 0=iir_df1dsos; 1=iir_df2tsos
@@ -23,7 +24,7 @@ seed = random.randrange(0, 2**32, 1)
 
 # """Unify all seeds"""
 log.info(f'"Random SEED: {seed}')
-iir_seq_lib.set_seed(seed)
+set_seed(seed)
 
 # set constants
 t = list(range(100000))[0:100]
@@ -72,7 +73,7 @@ try:
         if enable_svgen:
             cosim('iir_df1dsos',
                   'verilator',
-                  outdir='outputs/iir/rtl',
+                  outdir='build/iir/rtl',
                   timeout=1000)
     else:
         drv(t=Fixp[5, 24], seq=seq) \
@@ -82,7 +83,7 @@ try:
         if enable_svgen:
             cosim('iir_df2tsos',
                   'verilator',
-                  outdir='outputs/iir/rtl',
+                  outdir='build/iir/rtl',
                   timeout=1000)
 
     sim()
