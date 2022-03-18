@@ -2,7 +2,7 @@ import traceback
 from pygears.typing import Fixp, Array, code
 from pygears.lib import drv, check, serialize, flatten, collect
 from pygears.sim import sim, cosim, log
-from pygears_dsp.lib.fft_bf import FFT_list, FFT_recursive
+from lib_dsp.fft_bf import FFT_list, FFT_recursive
 from scipy.fft import fft
 from pygears import reg
 import math

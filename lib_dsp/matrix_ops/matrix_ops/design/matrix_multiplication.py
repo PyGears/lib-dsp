@@ -1,4 +1,4 @@
-from pygears_dsp.lib.matrix_ops.mult_by_column import column_multiplication
+from lib_dsp.matrix_ops import column_multiplication
 
 from pygears import gear
 from pygears.lib import flatten, ccat, dreg, decouple, dispatch, qdeal, group, sieve

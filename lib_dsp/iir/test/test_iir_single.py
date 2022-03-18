@@ -1,14 +1,14 @@
 import random
 import traceback
 from scipy import signal
-from pygears_dsp.lib.iir import iir_df1dsos, iir_df2tsos
+from lib_dsp.iir import iir_df1dsos, iir_df2tsos
 from math import pi, sin
 from pygears.lib import check, drv
 from pygears.typing import Fixp, Float
 from pygears.sim import sim, cosim, log
 from pygears import reg
 
-from conftest import set_seed, fixp_sat
+from lib_dsp.iir import iir_seq_lib
 
 ############################## SELECT TEST ###############################
 test_sel = 0  # 0=iir_df1dsos; 1=iir_df2tsos
@@ -23,7 +23,7 @@ seed = random.randrange(0, 2**32, 1)
 
 # """Unify all seeds"""
 log.info(f'"Random SEED: {seed}')
-set_seed(seed)
+iir_seq_lib.set_seed(seed)
 
 # set constants
 t = list(range(100000))[0:100]
@@ -59,7 +59,7 @@ ref = signal.sosfilt(sos, seq)
 
 # saturate the results value to filter output type if needed
 for i, r in enumerate(ref):
-    ref[i] = fixp_sat(Fixp[5, 24], float(r))
+    ref[i] = iir_seq_lib.fixp_sat(Fixp[5, 24], float(r))
 
 # convert ref data to floats
 fp_ref = [float(r) for r in ref]
@@ -72,7 +72,7 @@ try:
         if enable_svgen:
             cosim('iir_df1dsos',
                   'verilator',
-                  outdir='../../iir/rtl',
+                  outdir='outputs/iir/rtl',
                   timeout=1000)
     else:
         drv(t=Fixp[5, 24], seq=seq) \
@@ -82,7 +82,7 @@ try:
         if enable_svgen:
             cosim('iir_df2tsos',
                   'verilator',
-                  outdir='../../iir/rtl',
+                  outdir='outputs/iir/rtl',
                   timeout=1000)
 
     sim()

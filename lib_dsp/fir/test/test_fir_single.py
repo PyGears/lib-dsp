@@ -1,5 +1,4 @@
 import traceback
-from os.path import abspath
 import random
 
 import numpy as np
@@ -9,8 +8,8 @@ from pygears import reg
 from pygears.lib import check, drv
 from pygears.sim import cosim, log, sim
 from pygears.typing import Fixp, Float
-from pygears_dsp.lib.fir import fir_direct, fir_transposed
-from conftest import fixp_sat, set_seed
+from lib_dsp.fir import fir_direct, fir_transposed
+from lib_dsp.fir import fir_seq_lib
 
 ############################## SELECT TEST ###############################
 test_sel = 1  # 0=fir_direct; 1=fir_transposed
@@ -27,7 +26,7 @@ seed = random.randrange(0, 2**32, 1)
 
 # """Unify all seeds"""
 log.info(f"Random SEED: {seed}")
-set_seed(seed)
+fir_seq_lib.set_seed(seed)
 
 # generate b coefficients
 b_coef = firwin(8, [0.05, 0.95], width=0.05, pass_zero=False)
@@ -44,7 +43,7 @@ ref = np.convolve(x, b_coef)
 
 # saturate the results value to filter output type if needed
 for i, r in enumerate(ref):
-    ref[i] = fixp_sat(b_coef_type, float(r))
+    ref[i] = fir_seq_lib.fixp_sat(b_coef_type, float(r))
 
 try:
     if test_sel == 0:
@@ -56,7 +55,7 @@ try:
         if enable_svgen:
             cosim('fir_direct',
                   'verilator',
-                  outdir='../../outputs/fir/rtl',
+                  outdir='outputs/fir/rtl',
                   timeout=1000)
     else:
         drv(t=b_coef_type, seq=x) \
@@ -67,10 +66,10 @@ try:
         if enable_svgen:
             cosim('fir_transposed',
                   'verilator',
-                  outdir='../../outputs/fir/rtl',
+                  outdir='outputs/fir/rtl',
                   timeout=1000)
 
-    sim('../../outputs/fir/')
+    sim('outputs/fir/')
     log.info("\033[92m //==== PASS ====// \033[90m")
 except:
     # printing stack trace

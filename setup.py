@@ -11,7 +11,7 @@ def readme():
 
 
 setup(
-    name='pygears-dsp',
+    name='lib_dsp',
     version='0.0.1',
     description='PyGears library for implementing DSP algorithms',
     long_description=readme(),
@@ -27,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    python_requires='>=3.6.0',
+    python_requires='>=3.8.0',
     install_requires=['scipy', 'matplotlib', 'pytest', 'pygears'],
     setup_requires=['scipy', 'matplotlib', 'pytest', 'pygears'],
     package_data={'': ['*.j2', '*.sv']},

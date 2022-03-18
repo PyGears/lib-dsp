@@ -11,10 +11,9 @@ from pygears import reg, sim
 from pygears.lib import collect, drv, flatten
 from pygears.sim import cosim, log
 from pygears.typing import Array, Int, Queue
-from pygears_dsp.lib.matrix_ops.matrix_multiplication import (
+from lib_dsp.matrix_ops import (
     TCfg, matrix_multiplication)
-from pygears_dsp.lib.matrix_ops.mult_by_column import column_multiplication
-from conftest import set_seed
+from lib_dsp.matrix_ops.conftest import set_seed
 
 
 def matrix_ops_single():

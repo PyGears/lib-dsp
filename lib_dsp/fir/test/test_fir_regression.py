@@ -11,9 +11,8 @@ from pygears.lib import check, drv
 from pygears.sim import log, sim
 from pygears.sim.sim import cosim
 from pygears.typing import Fixp, Float
-from pygears_dsp.lib.fir import fir_direct, fir_transposed
-from conftest import (fixp_sat, random_choice_seq, random_seq, set_seed,
-                      sine_seq)
+from lib_dsp.fir import fir_direct, fir_transposed
+from lib_dsp.fir import fir_seq_lib
 
 
 def fir_compare(x, y):
@@ -36,7 +35,7 @@ def fir_sim(impl, t_b, seq, do_cosim, target='build/fir'):
 
     # saturate the results value to filter output type if needed
     for i, r in enumerate(res):
-        res[i] = fixp_sat(t_b, r)
+        res[i] = fir_seq_lib.fixp_sat(t_b, r)
 
     # driving
     drv(t=t_b, seq=seq) \
@@ -56,7 +55,7 @@ def fir_sim(impl, t_b, seq, do_cosim, target='build/fir'):
 @pytest.mark.parametrize('impl', [fir_direct, fir_transposed])
 def test_fir_random(impl, seed, do_cosim):
     # Set random seed
-    set_seed(seed)
+    fir_seq_lib.set_seed(seed)
 
     log.info(f'Running {__name__} impl: {impl}, seed: {seed}')
 
@@ -72,7 +71,7 @@ def test_fir_random(impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [fir_direct, fir_transposed])
 def test_fir_random_type(impl, seed, do_cosim):
     # Set random seed
-    set_seed(seed)
+    fir_seq_lib.set_seed(seed)
 
     log.info(f'{__name__} impl: {impl}, seed: {seed}')
 
@@ -91,7 +90,7 @@ def test_fir_random_type(impl, seed, do_cosim):
         for i in range(50):
             seq.append(num)
     # add a random sequence of certain size
-    seq.extend(random_seq(t_b, 100))
+    seq.extend(fir_seq_lib.random_seq(t_b, 100))
 
     # genrate  random numbers in [-1,1)
     # seq = np.random.random(size=(100, )) * 2 - 1
@@ -107,7 +106,7 @@ def test_fir_limits(fixp_w, int_w, impl, seed, do_cosim):
     """[Drive filter with extreme values [min, 0 , max]
     """
     # Set random seed
-    set_seed(seed)
+    fir_seq_lib.set_seed(seed)
 
     log.info(f'Running {__name__} impl: {impl}, seed: {seed}')
 
@@ -119,7 +118,7 @@ def test_fir_limits(fixp_w, int_w, impl, seed, do_cosim):
     extremes = [[0 for i in range(50)]]
     extremes.append([t_b.fmin for i in range(50)])
     extremes.append([t_b.fmax for i in range(50)])
-    seq = random_choice_seq(extremes, 10)
+    seq = fir_seq_lib.random_choice_seq(extremes, 10)
 
     log.debug(f'Generated sequence: {seq}')
 
@@ -132,7 +131,7 @@ def test_fir_sine(freq, impl, seed, do_cosim):
     """[Drive filter with sine signal at fs fs/2 and fs*2 
     """
     # Set random seed
-    set_seed(seed)
+    fir_seq_lib.set_seed(seed)
     # set clock freq
     reg['sim/clk_freq'] = freq
     t = list(range(reg['sim/clk_freq']))[0:100]
@@ -143,9 +142,9 @@ def test_fir_sine(freq, impl, seed, do_cosim):
 
     t_b = Fixp[1, 15]
     seq = [0 for i in range(10)]
-    seq.extend(sine_seq(f1, fs, 200, t_b))
-    seq.extend(sine_seq(f1, fs / 2, 100, t_b))
-    seq.extend(sine_seq(f1, fs * 2, 400, t_b))
+    seq.extend(fir_seq_lib.sine_seq(f1, fs, 200, t_b))
+    seq.extend(fir_seq_lib.sine_seq(f1, fs / 2, 100, t_b))
+    seq.extend(fir_seq_lib.sine_seq(f1, fs * 2, 400, t_b))
     seq.extend([0 for i in range(10)])
 
     log.debug(f'Generated sequence: {seq}')

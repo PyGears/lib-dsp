@@ -12,8 +12,8 @@ from pygears.lib import check, drv
 from pygears.sim import log, sim
 from pygears.sim.sim import cosim
 from pygears.typing import Fixp, Float
-from pygears_dsp.lib.iir import iir_df1dsos, iir_df2tsos
-from conftest import constant_seq, fixp_sat, random_choice_seq, random_seq, set_seed, sine_seq
+from lib_dsp.iir import iir_df1dsos, iir_df2tsos
+from lib_dsp.iir import iir_seq_lib
 
 
 def iir_compare(x, y):
@@ -59,7 +59,7 @@ def iir_sim(impl,
     # fp_ref = [float(r) for r in ref]
     # saturate the results value to filter output type if needed
     for i, r in enumerate(ref):
-        ref[i] = fixp_sat(t_out, float(r))
+        ref[i] = iir_seq_lib.fixp_sat(t_out, float(r))
 
     log.debug(f'Generated sequence: {seq}')
     log.debug(f'Refferenc result: {ref}')
@@ -129,13 +129,13 @@ def test_iir_direct(tmpdir, impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [iir_df1dsos, iir_df2tsos])
 def test_iir_random(impl, seed, do_cosim):
     log.info(f'Running test_iir_random seed: {seed}')
-    set_seed(seed)
+    iir_seq_lib.set_seed(seed)
 
     ftype = Fixp[5, 32]
 
-    seq = constant_seq(ftype, 10, 0)
-    seq.extend(random_seq(ftype, 100))
-    seq.extend(constant_seq(ftype, 10, 0))
+    seq = iir_seq_lib.constant_seq(ftype, 10, 0)
+    seq.extend(iir_seq_lib.random_seq(ftype, 100))
+    seq.extend(iir_seq_lib.constant_seq(ftype, 10, 0))
 
     iir_sim(impl, ftype, ftype, ftype, seq, do_cosim=do_cosim)
 
@@ -143,7 +143,7 @@ def test_iir_random(impl, seed, do_cosim):
 @pytest.mark.parametrize('impl', [iir_df1dsos, iir_df2tsos])
 def test_iir_random_type(impl, seed, do_cosim):
     log.info(f'Running test_iir_random, seed: {seed}')
-    set_seed(seed)
+    iir_seq_lib.set_seed(seed)
 
     # minimum supported precision Fixp[3,19]
     int_w = random.randint(3, 7)
@@ -154,9 +154,9 @@ def test_iir_random_type(impl, seed, do_cosim):
         f'{__name__} FIR input type t_b: {ftype} min: {ftype.fmin}, max: {ftype.fmax}'
     )
 
-    seq = constant_seq(ftype, 10, 0)
-    seq.extend(random_seq(ftype, 100))
-    seq.extend(constant_seq(ftype, 10, 0))
+    seq = iir_seq_lib.constant_seq(ftype, 10, 0)
+    seq.extend(iir_seq_lib.random_seq(ftype, 100))
+    seq.extend(iir_seq_lib.constant_seq(ftype, 10, 0))
 
     iir_sim(impl, ftype, ftype, ftype, seq, do_cosim=do_cosim)
 
@@ -170,16 +170,16 @@ def test_iir_limits(fixp_w, int_w, impl, seed, do_cosim):
     """[Drive filter with extreme values [min, 0 , max]
     """
     log.info(f'Running test_iir_limits, seed: {seed}')
-    set_seed(seed)
+    iir_seq_lib.set_seed(seed)
     factor = 0.5  # supported factor
 
     ftype = Fixp[int_w, fixp_w]
     print(f'max possible value {ftype.fmax}')
     extremes = [[0 for i in range(50)]]
     extremes.append([ftype.fmin * factor for i in range(10)])
-    seq = random_choice_seq(extremes, 10)
+    seq = iir_seq_lib.random_choice_seq(extremes, 10)
     extremes.append([ftype.fmax * factor for i in range(10)])
-    seq = random_choice_seq(extremes, 10)
+    seq = iir_seq_lib.random_choice_seq(extremes, 10)
     iir_sim(impl, ftype, ftype, ftype, seq, do_cosim=do_cosim)
 
 
@@ -189,7 +189,7 @@ def test_fir_sine(freq, impl, seed, do_cosim):
     """[Drive filter with sine signal at fs fs/2 and fs*2 
     """
     # Set random seed
-    set_seed(seed)
+    iir_seq_lib.set_seed(seed)
     # set clock freq
     reg['sim/clk_freq'] = freq
     t = list(range(reg['sim/clk_freq']))[0:100]
@@ -199,11 +199,11 @@ def test_fir_sine(freq, impl, seed, do_cosim):
 
     ftype = Fixp[5, 32]
     seq = [0 for i in range(10)]
-    seq.extend(sine_seq(f1, fs, 200, ftype))
+    seq.extend(iir_seq_lib.sine_seq(f1, fs, 200, ftype))
     seq.extend([0 for i in range(100)])
-    seq.extend(sine_seq(f1, fs / 2, 100, ftype))
+    seq.extend(iir_seq_lib.sine_seq(f1, fs / 2, 100, ftype))
     seq.extend([0 for i in range(100)])
-    seq.extend(sine_seq(f1, fs * 2, 400, ftype))
+    seq.extend(iir_seq_lib.sine_seq(f1, fs * 2, 400, ftype))
     seq.extend([0 for i in range(10)])
     res = iir_sim(impl, ftype, ftype, ftype, seq, do_cosim=do_cosim)
 

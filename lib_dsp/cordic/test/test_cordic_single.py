@@ -9,7 +9,7 @@ from pygears.sim import cosim, sim, log
 from pygears.sim.modules.verilator import SimVerilated
 from pygears.typing import Int, Tuple, Uint
 from pygears.util.test_utils import synth_check
-from pygears_dsp.lib.cordic import (cordic_first_stage, cordic_params,
+from lib_dsp.cordic import (cordic_first_stage, cordic_params,
                                     cordic_sin_cos, cordic_stage,
                                     cordic_stages)
 
