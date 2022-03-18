@@ -71,15 +71,17 @@ python test_fir_single.py
 ## Directory structure
 - dsp_lib `root folder`
   - dsp_lib `library with gears`
-    - dsp_gear_1 `one specific gear`
-      - design `design of gear`
-      - verif `verification files for gear`
+    - dsp_gear_1
+      - dsp_gear_1 `one specific gear`
+        - design `design of gear`
+        - verif `verification files for gear`
       - doc `local documentation about gear`
       - test `test files for gear`
       - demo `demo/example how gear is used`
     - dsp_gear_2
-      - design
-      - verif
+      - dsp_gear_2
+        - design
+        - verif
       - doc
       - test
       - demo
