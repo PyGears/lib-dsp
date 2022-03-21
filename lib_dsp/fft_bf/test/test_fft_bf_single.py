@@ -7,6 +7,8 @@ from scipy.fft import fft
 from pygears import reg
 import math
 
+from lib_dsp.fft_bf import round_to_fixp, fft_bf_ref_model
+
 ########################## DESIGN CONTROLS ##########################
 stages = 3
 Wn_fixp_size = [1, 8]
@@ -24,14 +26,6 @@ reg['debug/webviewer'] = True
 
 # helpers
 D = 2**stages
-
-
-def round_to_fixp(din, t):
-    rounded = din * (2**t.fract) // 1
-    if rounded == 2**(t.width - 1):
-        rounded -= 1
-    return code(int(rounded), cast_type=t)
-
 
 # type definitions
 Wn_num_type = Fixp[Wn_fixp_size[0], Wn_fixp_size[1]]
@@ -76,11 +70,7 @@ for input_points_ix in input_points:
 test_input = drv(t=input_seq_type, seq=[input_seq])
 
 # test expected outputs
-exp_res = []
-calc_res = fft(input_points)
-for calc_res_i in calc_res:
-    exp_res.append(calc_res_i.real)
-    exp_res.append(calc_res_i.imag)
+exp_res = fft_bf_ref_model(input_points)
 
 # # connect DUT
 if dut_select == 0:
