@@ -2,7 +2,7 @@
 ![PyPI - License](https://img.shields.io/pypi/l/pygears?style=plastic)
 
 # PyGears DSP Library
-PyGears library is Free and Open Sourced DSP library created for use in [PyGears](pygears.org) framework.
+PyGears library is Free and Open Sourced DSP library created for use in [PyGears](https://www.pygears.org) framework.
 
 ## Table of content
 - [PyGears DSP Library](#pygears-dsp-library)
